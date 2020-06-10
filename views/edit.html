@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <title>Details</title>
+</head>
+
+<body style="margin-top: 5%">
+    <div class="container">
+
+        <form class="col s12" action="/updateNews" method="POST">
+            <div class="row" style="margin-top: 10%">
+                <div class="input-field col s2 m2">
+                    <label class="active" for="first_name2">Date</label>
+                </div>
+                <div class="input-field col s10 m6">
+                    <input name="date" id="first_name2" type="date" class="validate" value="<%= data.date %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s2 m2">
+                    <label class="active">Title</label>
+                </div>
+                <select name="type" class="browser-default col s10 m6"  required>
+                  <option value="" disabled selected>Choose your option</option>
+                  <option value="娛樂">娛樂</option>
+                  <option value="生活">生活</option>
+                  <option value="政治">政治</option>
+                  <option value="財經">財經</option>
+                  <option value="運動">運動</option>
+                  <option value="科技">科技</option>
+                  <option value="國際">國際</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="input-field col s2 m2">
+                    <label class="active" for="first_name2">Title</label>
+                </div>
+                <div class="input-field col s10 m10">
+                    <input name="title" id="first_name2" type="text" class="validate" value="<%= data.title %>" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s2 m2">
+                    <label class="active" for="first_name2">Content</label>
+                </div>
+                <div class="input-field col s10 m10">
+                    <textarea name="content" style="height: 200px;" id="textarea1" class="materialize-textarea" required><%= data.content %></textarea>
+                </div>
+            </div>
+            <input name='_id' type="hidden" value="<%= data._id %>">
+            <input name="pageNow" type="hidden" value="<%= pageNow %>">
+            <button class="waves-effect waves-light btn" type="submit">save</button>
+        </form>
+    </div>
+</body>
+
+</html>
