@@ -10,12 +10,11 @@ const dateFormat = require('dateformat')
 N.open = async function () {
     client = await MongoClient.connect(url,{useUnifiedTopology: true, useNewUrlParser: true})
     db = client.db(dbName) 
-    news = db.collection('news')
-    console.log('test') 
+    news = db.collection('news') 
 }
 
 N.list = async function (){
-    let data = await news.find()
+    let data = await news.find().sort({data:-1})
     return data
 }
 

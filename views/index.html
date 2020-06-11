@@ -15,8 +15,16 @@
 </head>
 <body>
     <div class="container">
-        <h2>新聞系統</h2>
-        <a class="btn-floating btn-large waves-effect waves-light" href="create.html"><i class="material-icons">add</i></a>
+        <div class="row">
+            <div class="col s6">
+                <h2>新聞系統</h2>
+            </div>
+            <div class="col s6">
+                <h2>
+                <a class="btn-floating btn-large waves-effect waves-light" href="create.html" style="float: right;" ><i class="material-icons">add</i></a>    
+                <h2>
+            </div>
+        </div>
         <table class="striped">
             <thead>
                 <tr>
@@ -40,11 +48,21 @@
                 <% } %>
             </tbody>
         </table>
-      
-        <ul class="pagination">
-            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i class="material-icons">chevron_left</i></a></li>
 
-            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i class="material-icons">chevron_right</i></a></li>
+        <ul class="pagination">
+            <% if(pageNow > 1 && pageNow < totalPage){%>
+                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i class="material-icons">chevron_left</i></a></li>
+                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i class="material-icons">chevron_right</i></a></li>
+            <% } else if(pageNow <= 1 && pageNow < totalPage){ %>
+                <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
+                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i class="material-icons">chevron_right</i></a></li>
+            <% } else if(pageNow == totalPage && pageNow > 1){ %>
+                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i class="material-icons">chevron_left</i></a></li>
+                <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
+            <% } else { %>
+                <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
+                <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
+            <% } %>
         </ul>
     </div>
 <script>

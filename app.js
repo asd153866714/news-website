@@ -46,47 +46,74 @@ router
     let totalPage = Math.ceil(totalLine/linePerPage)
 
     let result = data.slice(5*pageNow-5,5*pageNow)
-
+    console.log('pageNow:',pageNow)
+    console.log('totalPage:', totalPage)
     await ctx.render('index', {
          data:result, pageNow, totalLine, totalPage, linePerPage
     })
 })
+
 .get('/news', async (ctx) => {
     let n_id = ctx.query._id
     let op = ctx.query.op
-    switch (op) {
-        case 'view':
-            var data = await N.get(n_id)
-            await ctx.render('view',{
-                data
-            })
-            break;
-            
-        case 'edit':
-            var data = await N.get(n_id)
-            let pageNow = ctx.query.pageNow
-            await ctx.render('edit',{
-                data, pageNow
-            })
-            break;
+    if (n_id && op){
+        switch (op) {
+            case 'view':
+                var data = await N.get(n_id)
+                await ctx.render('view',{
+                    data
+                })
+                break;
+                
+            case 'edit':
+                var data = await N.get(n_id)
+                let pageNow = ctx.query.pageNow
+                await ctx.render('edit',{
+                    data, pageNow
+                })
+                break;
+        }
+    }
+    else{
+        ctx.status = 404
     }
 })
+
 .post('/createNews', async (ctx) => {
     let data = ctx.request.body
-    console.log(data)
-    await N.add(data)
-    ctx.redirect('/')
+    if(data){
+        console.log(data)
+        await N.add(data)
+        ctx.status = 201
+        ctx.redirect('/')
+    }
+    else{
+        ctx.status = 404
+    }
 })
+
 .post('/updateNews', async (ctx) => {
     let data = ctx.request.body
-    console.log(data)
-    await N.update(data)
-    ctx.redirect(`/?pageNow=${data.pageNow}`)
+    if(data){
+        await N.update(data)  
+        ctx.status = 201
+        ctx.redirect(`/?pageNow=${data.pageNow}`)      
+    }
+    else{
+        ctx.status = 404
+    }
 })
+
 .post('/removeNews', async (ctx) => {
     let n_id = ctx.request.body
-    await N.remove(n_id)
-    ctx.response.body = `${n_id} remove!`
+    if(n_id){
+        await N.remove(n_id)
+        ctx.response.body = `${n_id} remove!`
+        if()
+    }
+    else{
+        ctx.status = 404
+    }
 });
 
 (async function () {
