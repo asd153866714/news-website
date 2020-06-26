@@ -4,7 +4,7 @@ const MongoClient = mongodb.MongoClient
 const url = 'mongodb://localhost:27017'
 const dbName = 'News'
 var client, db, news
-const ObjectId = require('mongodb').ObjectId
+const ObjectId = mongodb.ObjectId
 const dateFormat = require('dateformat')
 
 N.open = async function () {

@@ -13,16 +13,18 @@
 
     <title>home</title>
 </head>
+
 <body>
     <div class="container">
         <div class="row">
             <div class="col s6">
-                <h2>新聞系統</h2>
+                <h2>新聞公告</h2>
             </div>
             <div class="col s6">
                 <h2>
-                <a class="btn-floating btn-large waves-effect waves-light" href="create.html" style="float: right;" ><i class="material-icons">add</i></a>    
-                <h2>
+                    <a class="btn-floating btn-large waves-effect waves-light" href="create.html"
+                        style="float: right;"><i class="material-icons">add</i></a>
+                    <h2>
             </div>
         </div>
         <table class="striped">
@@ -35,14 +37,17 @@
                 </tr>
             </thead>
             <tbody>
-                <% for(var i=0; i < data.length; i++){ %>
-                <tr id="<%= data[i]._id %>">
-                    <td><%= data[i].date %></td>
-                    <td><%= data[i].type %></td>
-                    <td><a href="/news?_id=<%= data[i]._id %>&op=view&pageNow=<%= pageNow %>"><%= data[i].title %></a></td>
+
+                <% for(var i=0; i < datas.length; i++){ %>
+                <tr class="newsList" id="<%= datas[i]._id %>">
+                    <td><%= datas[i].date %></td>
+                    <td><%= datas[i].type %></td>
+                    <td><a href="/news?_id=<%= datas[i]._id %>&op=view&pageNow=<%= pageNow %>"><%= datas[i].title %></a>
+                    </td>
                     <td>
-                        <a href="/news?_id=<%= data[i]._id %>&op=edit&pageNow=<%= pageNow %>"><i class="material-icons">mode_edit</i></a>
-                        <a href="" onclick="remove(`<%= data[i]._id %>`)"><i class="material-icons">clear</i></a>
+                        <a href="/news?_id=<%= datas[i]._id %>&op=edit&pageNow=<%= pageNow %>"><i
+                                class="material-icons">mode_edit</i></a>
+                        <a href="#" onclick="remove(`<%= datas[i]._id %>`)"><i class="material-icons">clear</i></a>
                     </td>
                 </tr>
                 <% } %>
@@ -51,32 +56,46 @@
 
         <ul class="pagination">
             <% if(pageNow > 1 && pageNow < totalPage){%>
-                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i class="material-icons">chevron_right</i></a></li>
+            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i
+                        class="material-icons">chevron_left</i></a></li>
+            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i
+                        class="material-icons">chevron_right</i></a></li>
             <% } else if(pageNow <= 1 && pageNow < totalPage){ %>
-                <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i class="material-icons">chevron_right</i></a></li>
+            <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
+            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow+1) %>"><i
+                        class="material-icons">chevron_right</i></a></li>
             <% } else if(pageNow == totalPage && pageNow > 1){ %>
-                <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
+            <li class="waves-effect"><a href="/?pageNow=<%= (pageNow-1) %>"><i
+                        class="material-icons">chevron_left</i></a></li>
+            <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
             <% } else { %>
-                <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
+            <li class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
+            <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
             <% } %>
         </ul>
     </div>
-<script>
-    function remove(n_id){
-        var r = new XMLHttpRequest();
-        r.open("POST", "removeNews", true)
-        r.onreadystatechange = function(){
-            if (r.readyState != 4 || r.status != 200) return
-        }
-        r.send(n_id)
+    <script>
 
-        document.getElementById(`#${n_id}`).innerHTML=''
-    }
-</script>
+        async function remove(n_id) {
+            await fetch("removeNews", {
+                method: "POST",
+                body: n_id
+            }).then((response) => { console.log(response.text()) })
+
+            document.getElementById(`${n_id}`).innerHTML = null
+
+            // var r = new XMLHttpRequest()
+            // r.open("POST", "removeNews", true)
+            // r.onreadystatechange = function(){
+            //     if (r.readyState != 4 || r.status != 200) return
+            // }
+            // r.send(n_id)
+
+            if (! document.querySelector(".newsList").innerHTML) {
+                window.location = '/'
+            }
+        }
+    </script>
 </body>
 
 </html>

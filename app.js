@@ -10,111 +10,106 @@ const N = require('./models/news')
 var app = new Koa()
 const router = new Router()
 
-app.use(views('views', {map:{html:'ejs'}})) 
+app.use(views('views', { map: { html: 'ejs' } }))
 app.use(koaLogger())
 app.use(koaBody())
-app.keys = ['*@&))9kdjafda;983'] 
-const CONFIG = { 
-  key: 'd**@&(_034k3q3&@^(!$!',
-  maxAge: 86400000
+app.keys = ['*@&))9kdjafda;983']
+const CONFIG = {
+    key: 'd**@&(_034k3q3&@^(!$!',
+    maxAge: 86400000
 }
-app.use(session(CONFIG, app)) 
+app.use(session(CONFIG, app))
 
 app.use(router.routes())
 app.use(serve(__dirname + '/views'))
 
 router
-.get('/', async (ctx) => {
-    
-    let data = []
-    let linePerPage = 5
-    let pageNow
+    .get('/', async (ctx) => {
 
-    if (ctx.query.pageNow){
-        pageNow = Number(ctx.query.pageNow)
-    }
-    else{
-        pageNow = 1
-    }
+        let datas = []
+        let linePerPage = 5
+        let pageNow
 
-    let news = await N.list()
-    await news.forEach(element => {
-        data.push(element)
-    })
-
-    let totalLine = data.length
-    let totalPage = Math.ceil(totalLine/linePerPage)
-
-    let result = data.slice(5*pageNow-5,5*pageNow)
-    console.log('pageNow:',pageNow)
-    console.log('totalPage:', totalPage)
-    await ctx.render('index', {
-         data:result, pageNow, totalLine, totalPage, linePerPage
-    })
-})
-
-.get('/news', async (ctx) => {
-    let n_id = ctx.query._id
-    let op = ctx.query.op
-    if (n_id && op){
-        switch (op) {
-            case 'view':
-                var data = await N.get(n_id)
-                await ctx.render('view',{
-                    data
-                })
-                break;
-                
-            case 'edit':
-                var data = await N.get(n_id)
-                let pageNow = ctx.query.pageNow
-                await ctx.render('edit',{
-                    data, pageNow
-                })
-                break;
+        if (ctx.query.pageNow) {
+            pageNow = Number(ctx.query.pageNow)
+        } else {
+            pageNow = 1
         }
-    }
-    else{
-        ctx.status = 404
-    }
-})
 
-.post('/createNews', async (ctx) => {
-    let data = ctx.request.body
-    if(data){
-        console.log(data)
-        await N.add(data)
-        ctx.status = 201
-        ctx.redirect('/')
-    }
-    else{
-        ctx.status = 404
-    }
-})
+        let news = await N.list()
+        await news.forEach(element => {
+            datas.push(element)
+        })
 
-.post('/updateNews', async (ctx) => {
-    let data = ctx.request.body
-    if(data){
-        await N.update(data)  
-        ctx.status = 201
-        ctx.redirect(`/?pageNow=${data.pageNow}`)      
-    }
-    else{
-        ctx.status = 404
-    }
-})
+        let totalLine = datas.length
+        let totalPage = Math.ceil(totalLine / linePerPage)
 
-.post('/removeNews', async (ctx) => {
-    let n_id = ctx.request.body
-    if(n_id){
-        await N.remove(n_id)
-        ctx.response.body = `${n_id} remove!`
-        if()
-    }
-    else{
-        ctx.status = 404
-    }
-});
+        let result = datas.slice(5 * pageNow - 5, 5 * pageNow)
+        console.log('pageNow:', pageNow)
+        console.log('totalPage:', totalPage)
+        await ctx.render('index', {
+            datas: result, pageNow, totalLine, totalPage, linePerPage
+        })
+    })
+
+    .get('/news', async (ctx) => {
+        let n_id = ctx.query._id
+        let op = ctx.query.op
+        if (n_id && op) {
+            switch (op) {
+                case 'view':
+                    var data = await N.get(n_id)
+                    await ctx.render('view', {
+                        data
+                    })
+                    break;
+
+                case 'edit':
+                    var data = await N.get(n_id)
+                    let pageNow = ctx.query.pageNow
+                    await ctx.render('edit', {
+                        data, pageNow
+                    })
+                    break;
+            }
+        }
+        else {
+            ctx.status = 404
+        }
+    })
+
+    .post('/createNews', async (ctx) => {
+        let data = ctx.request.body
+        if (data) {
+            console.log(data)
+            await N.add(data)
+            ctx.status = 201
+            ctx.redirect('/')
+        } else {
+            ctx.status = 404
+        }
+    })
+
+    .post('/updateNews', async (ctx) => {
+        let data = ctx.request.body
+        if (data) {
+            await N.update(data)
+            ctx.status = 201
+            ctx.redirect(`/?pageNow=${data.pageNow}`)
+        } else {
+            ctx.status = 404
+        }
+    })
+
+    .post('/removeNews', async (ctx) => {
+        let n_id = ctx.request.body
+        if (n_id) {
+            await N.remove(n_id)
+            ctx.response.body = `${n_id} remove!`
+        } else {
+            ctx.status = 404
+        }
+    });
 
 (async function () {
     await N.open()
