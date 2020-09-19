@@ -1,2 +1,2 @@
-# news-website
-新聞公告系統
+# News-website
+A simple News app build with Koa.js + Mongodb + Materialize.css

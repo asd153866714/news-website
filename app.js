@@ -1,8 +1,7 @@
 const Koa = require('koa')
+var Router = require('koa-router')
 var serve = require('koa-static')
 const session = require('koa-session')
-var Router = require('koa-router')
-var koaLogger = require('koa-logger')
 const koaBody = require('koa-body')
 const views = require('koa-views')
 const N = require('./models/news')
@@ -11,7 +10,6 @@ var app = new Koa()
 const router = new Router()
 
 app.use(views('views', { map: { html: 'ejs' } }))
-app.use(koaLogger())
 app.use(koaBody())
 app.keys = ['*@&))9kdjafda;983']
 const CONFIG = {
@@ -20,7 +18,6 @@ const CONFIG = {
 }
 app.use(session(CONFIG, app))
 
-app.use(router.routes())
 app.use(serve(__dirname + '/views'))
 
 router
@@ -111,8 +108,9 @@ router
         }
     });
 
-(async function () {
+app.use(router.routes())
+
+app.listen(3000, async() => {
     await N.open()
-    app.listen(3000)
     console.log("server run at http://localhost:3000")
-}())
+})
